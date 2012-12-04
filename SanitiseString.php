@@ -24,35 +24,12 @@ class SanitiseString
 	 * and the value is it's replacement.
 	 */
 	public static $generalBannedChars = array(
-		 "’" => "'",
-		 "“" => "\"",
-		 "”" => "\""
+        "’" => "'",
+        "“" => "\"",
+        "”" => "\"",
+        "…" => "...",
+        "–" => "-"
 	);
-
-	/**
-	 * Implements a singleton paradigm to ensure we're always dealing with the initially
-	 * supplied string and no other.
-	 */
-	private function __construct($payload)
-	{
-		self::setPayload($payload);
-	}
-
-	/**
-	 * Implements a singleton paradigm to ensure we're always dealing with the initially
-	 * supplied string and no other.
-	 *
-	 * @return self
-	 */
-	public static function getInstance($payload)
-	{
-		if (self::$instance instanceof self)
-			return self::$instance;
-
-		self::$instance = new self($payload);
-
-		return self::$instance;
-	}
 
 	/**
 	 * Sets the payload.
@@ -67,10 +44,11 @@ class SanitiseString
 	 */
 	public static function runGeneral($payload)
 	{
-		$instance = self::getInstance($payload);
-        $instance->stripGeneral();
+		self::setPayload($payload);
 
-		return $instance::$payload;
+        self::stripGeneral();
+
+		return self::$payload;
 	}
 
 	/**
@@ -78,11 +56,11 @@ class SanitiseString
 	 *
 	 * @return void
 	 */
-	private function stripGeneral()
+	private static function stripGeneral()
 	{
 		foreach (self::$generalBannedChars as $banned => $replacement)
 		{
-			str_replace($banned, $replacement, self::$payload);
+			self::$payload = str_replace($banned, $replacement, self::$payload);
 		}
 	}
 }
