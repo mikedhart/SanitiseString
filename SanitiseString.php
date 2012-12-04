@@ -44,7 +44,7 @@ class SanitiseString
 	 *
 	 * @return self
 	 */
-	public static getInstance($payload)
+	public static function getInstance($payload)
 	{
 		if (self::$instance instanceof self)
 			return self::$instance;
@@ -57,7 +57,7 @@ class SanitiseString
 	/**
 	 * Sets the payload.
 	 */
-	private static setPayload($payload)
+	private static function setPayload($payload)
 	{
 		self::$payload = $payload;
 	}
@@ -65,16 +65,17 @@ class SanitiseString
 	/**
 	 * Run every sanitising command.
 	 */
-	public static runGeneral($payload)
+	public static function runGeneral($payload)
 	{
 		$instance = self::getInstance($payload);
+        $instance->stripGeneral();
 
-		return self::$payload;
+		return $instance::$payload;
 	}
 
 	/**
 	 * Iterate over the general banned characters and apply any replacements
-	 * 
+	 *
 	 * @return void
 	 */
 	private function stripGeneral()
